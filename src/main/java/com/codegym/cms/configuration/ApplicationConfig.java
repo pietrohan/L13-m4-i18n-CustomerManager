@@ -24,6 +24,7 @@ import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
@@ -133,7 +134,7 @@ public class ApplicationConfig implements WebMvcConfigurer, ApplicationContextAw
     public MessageSource messageSource(){
         ResourceBundleMessageSource messageSource =new ResourceBundleMessageSource();
         messageSource.setBasename("message");
-        messageSource.setDefaultEncoding("UTL-8");
+        messageSource.setDefaultEncoding("UTF-8");
         return messageSource;
     }
     @Bean
@@ -141,5 +142,11 @@ public class ApplicationConfig implements WebMvcConfigurer, ApplicationContextAw
         SessionLocaleResolver localeResolver = new SessionLocaleResolver();
         localeResolver.setDefaultLocale(new Locale("en"));
         return localeResolver;
+    }
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        LocaleChangeInterceptor interceptor = new LocaleChangeInterceptor();
+        interceptor.setParamName("lang");
+        registry.addInterceptor(interceptor);
     }
 }
